@@ -1,6 +1,8 @@
 module.exports = {
   validateProjectId,
-  validateProject
+  validateProject,
+  validateActionId,
+  validateAction
 }
 
 // Import project model ---------------------------|
@@ -60,7 +62,7 @@ function validateProject(req, res, next) {
 function validateActionId(req, res, next) {
   const { id } = req.params
 
-  Projects.get(id)
+  Actions.get(id)
     .then(action => {
       if (action) {
         req.action = action
@@ -75,4 +77,49 @@ function validateActionId(req, res, next) {
         message: 'Error processing request'
       })
     })
+}
+// ------------------------------------------------|
+function validateAction(req, res, next) {
+  if (req.body && Object.keys(req.body).length > 0) {
+    const { project_id, description, notes } = req.body
+    // Make sure project_id is a valid project_id
+    if (project_id === Number(req.params.id)) {
+      // Make sure description and notes exist
+      if (description && notes) {
+        // check for valid description
+        if (
+          description.length > 2 &&
+          description.length <= 128 &&
+          typeof description === 'string'
+        ) {
+          // check for valid notes field
+          if (notes.length > 2 && typeof notes === 'string') {
+            // all checks have passed
+            next()
+          } else {
+            res.status(400).json({
+              message: 'Notes field must be a string and cannot be empty'
+            })
+          }
+        } else {
+          res.status(400).json({
+            message:
+              'Description field must be a string less than or equal to 128 characters and cannot be empty'
+          })
+        }
+      } else {
+        res.status(400).json({
+          message: 'Missing required description and/or notes field'
+        })
+      }
+    } else {
+      res.status(400).json({
+        message: 'The project_id field must match id in the url of your request'
+      })
+    }
+  } else {
+    res.status(400).json({
+      message: 'Missing action data'
+    })
+  }
 }

@@ -4,6 +4,8 @@
 const router = require('express').Router()
 // bring in DB operations -------------------------|
 const Actions = require('./actionModel.js')
+// bring in custom middleware ---------------------|
+const { validateActionId } = require('../middleware/routerMiddleware.js')
 // ------------------------------------------------|
 // REQ HANDLERS ===================================|
 // ================================================|
@@ -24,9 +26,9 @@ router.get('/', async (req, res) => {
 })
 // ------------------------------------------------|
 // GET Request returns an action by id ------------|
-router.get('/', async (req, res) => {
+router.get('/:id', validateActionId, async (req, res) => {
   try {
-    const actions = await Actions.get()
+    const actions = await Actions.get(req.action.id)
 
     res.status(200).json(actions)
   } catch (error) {
@@ -36,6 +38,7 @@ router.get('/', async (req, res) => {
     })
   }
 })
+
 // ------------------------------------------------|
 // EXPORT ROUTER ==================================|
 // ================================================|

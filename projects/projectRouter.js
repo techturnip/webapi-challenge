@@ -4,10 +4,12 @@
 const router = require('express').Router()
 // bring in DB operations -------------------------|
 const Projects = require('./projectModel.js')
+const Actions = require('../actions/actionModel.js')
 // bring in custom middleware ---------------------|
 const {
   validateProjectId,
-  validateProject
+  validateProject,
+  validateAction
 } = require('../middleware/routerMiddleware.js')
 // ------------------------------------------------|
 // REQ HANDLERS ===================================|
@@ -54,6 +56,21 @@ router.post('/', validateProject, async (req, res) => {
   }
 })
 // ------------------------------------------------|
+// POST Request creates a new action in db for the
+// specified project ------------------------------|
+router.post('/:id', validateAction, async (req, res) => {
+  try {
+    const newAction = await Actions.insert(req.body)
+
+    res.status(200).json(newAction)
+  } catch (error) {
+    res.status(500).json({
+      message: 'Could not create action for specified project'
+    })
+  }
+})
+
+// ------------------------------------------------|
 // PUT Request updates a project in db ------------|
 router.put('/:id', validateProjectId, validateProject, async (req, res) => {
   try {
@@ -66,7 +83,7 @@ router.put('/:id', validateProjectId, validateProject, async (req, res) => {
   }
 })
 // ------------------------------------------------|
-// PUT Request updates a project in db ------------|
+// DELETE Request removes a project in db ---------|
 router.delete('/:id', validateProjectId, async (req, res) => {
   try {
     const deleteProject = await Projects.remove(req.project.id)
