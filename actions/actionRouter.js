@@ -56,6 +56,20 @@ router.put('/:id', validateActionId, validateActionUpdate, async (req, res) => {
   }
 })
 // ------------------------------------------------|
+// DELETE Request removes an action from db -------|
+router.delete('/:id', validateActionId, async (req, res) => {
+  try {
+    const removeAction = await Actions.remove(req.action.id)
+
+    res.status(200).json(req.action)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      message: 'Could not remove action from database'
+    })
+  }
+})
+// ------------------------------------------------|
 // EXPORT ROUTER ==================================|
 // ================================================|
 module.exports = router
