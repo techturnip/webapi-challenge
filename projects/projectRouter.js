@@ -54,7 +54,7 @@ router.post('/', validateProject, async (req, res) => {
   }
 })
 // ------------------------------------------------|
-// PUT Request updates a project in db -------|
+// PUT Request updates a project in db ------------|
 router.put('/:id', validateProjectId, validateProject, async (req, res) => {
   try {
     const updatedProject = await Projects.update(req.project.id, req.body)
@@ -66,9 +66,19 @@ router.put('/:id', validateProjectId, validateProject, async (req, res) => {
   }
 })
 // ------------------------------------------------|
-// CUSTOM MIDDLEWARE ==============================|
-// ================================================|
+// PUT Request updates a project in db ------------|
+router.delete('/:id', validateProjectId, async (req, res) => {
+  try {
+    const deleteProject = await Projects.remove(req.project.id)
 
+    res.status(200).json(req.project)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      message: 'Could not remove specified project from database'
+    })
+  }
+})
 // ------------------------------------------------|
 // EXPORT ROUTER ==================================|
 // ================================================|
