@@ -5,8 +5,9 @@ module.exports = {
 
 // Import project model ---------------------------|
 const Projects = require('../projects/projectModel.js')
+const Actions = require('../actions/actionModel.js')
 // ------------------------------------------------|
-// CUSTOM PROJECTS MIDDLEWARE =====================|
+// CUSTOM MIDDLEWARE ==============================|
 // ================================================|
 function validateProjectId(req, res, next) {
   const { id } = req.params
@@ -54,4 +55,24 @@ function validateProject(req, res, next) {
   } else {
     res.status(400).json({ message: 'Missing project data' })
   }
+}
+// ------------------------------------------------|
+function validateActionId(req, res, next) {
+  const { id } = req.params
+
+  Projects.get(id)
+    .then(action => {
+      if (action) {
+        req.action = action
+        next()
+      } else {
+        res.status(404).json({ message: 'Invalid action id' })
+      }
+    })
+    .catch(error => {
+      console.log(error)
+      res.status(500).json({
+        message: 'Error processing request'
+      })
+    })
 }
