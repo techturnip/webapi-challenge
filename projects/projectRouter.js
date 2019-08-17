@@ -9,7 +9,7 @@ const Actions = require('../actions/actionModel.js')
 const {
   validateProjectId,
   validateProject,
-  validateAction
+  validateActionPost
 } = require('../middleware/routerMiddleware.js')
 // ------------------------------------------------|
 // REQ HANDLERS ===================================|
@@ -58,7 +58,7 @@ router.post('/', validateProject, async (req, res) => {
 // ------------------------------------------------|
 // POST Request creates a new action in db for the
 // specified project ------------------------------|
-router.post('/:id', validateAction, async (req, res) => {
+router.post('/:id', validateActionPost, async (req, res) => {
   try {
     const newAction = await Actions.insert(req.body)
 
@@ -69,7 +69,6 @@ router.post('/:id', validateAction, async (req, res) => {
     })
   }
 })
-
 // ------------------------------------------------|
 // PUT Request updates a project in db ------------|
 router.put('/:id', validateProjectId, validateProject, async (req, res) => {

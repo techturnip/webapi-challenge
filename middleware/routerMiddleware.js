@@ -2,7 +2,8 @@ module.exports = {
   validateProjectId,
   validateProject,
   validateActionId,
-  validateAction
+  validateActionPost,
+  validateActionUpdate
 }
 
 // Import project model ---------------------------|
@@ -79,7 +80,7 @@ function validateActionId(req, res, next) {
     })
 }
 // ------------------------------------------------|
-function validateAction(req, res, next) {
+function validateActionPost(req, res, next) {
   if (req.body && Object.keys(req.body).length > 0) {
     const { project_id, description, notes } = req.body
     // Make sure project_id is a valid project_id
@@ -115,6 +116,44 @@ function validateAction(req, res, next) {
     } else {
       res.status(400).json({
         message: 'The project_id field must match id in the url of your request'
+      })
+    }
+  } else {
+    res.status(400).json({
+      message: 'Missing action data'
+    })
+  }
+}
+// ------------------------------------------------|
+function validateActionUpdate(req, res, next) {
+  if (req.body && Object.keys(req.body).length > 0) {
+    const { description, notes } = req.body
+    // Make sure description and notes exist
+    if (description && notes) {
+      // check for valid description
+      if (
+        description.length > 2 &&
+        description.length <= 128 &&
+        typeof description === 'string'
+      ) {
+        // check for valid notes field
+        if (notes.length > 2 && typeof notes === 'string') {
+          // all checks have passed
+          next()
+        } else {
+          res.status(400).json({
+            message: 'Notes field must be a string and cannot be empty'
+          })
+        }
+      } else {
+        res.status(400).json({
+          message:
+            'Description field must be a string less than or equal to 128 characters and cannot be empty'
+        })
+      }
+    } else {
+      res.status(400).json({
+        message: 'Missing required description and/or notes field'
       })
     }
   } else {

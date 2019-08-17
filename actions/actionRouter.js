@@ -5,7 +5,10 @@ const router = require('express').Router()
 // bring in DB operations -------------------------|
 const Actions = require('./actionModel.js')
 // bring in custom middleware ---------------------|
-const { validateActionId } = require('../middleware/routerMiddleware.js')
+const {
+  validateActionId,
+  validateActionUpdate
+} = require('../middleware/routerMiddleware.js')
 // ------------------------------------------------|
 // REQ HANDLERS ===================================|
 // ================================================|
@@ -38,7 +41,20 @@ router.get('/:id', validateActionId, async (req, res) => {
     })
   }
 })
+// ------------------------------------------------|
+// PUT Request updates an action in db ------------|
+router.put('/:id', validateActionId, validateActionUpdate, async (req, res) => {
+  try {
+    const actionUpdate = await Actions.update(req.action.id, req.body)
 
+    res.status(200).json(actionUpdate)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      message: 'Could not update action in database'
+    })
+  }
+})
 // ------------------------------------------------|
 // EXPORT ROUTER ==================================|
 // ================================================|
