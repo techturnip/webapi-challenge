@@ -26,13 +26,23 @@ Demonstrate your understanding of this Sprint's concepts by answering the follow
 
 - [ ] Mention two parts of Express that you learned about this week.
 
+I have learned about the body parsing functionality of express and how to implement and leverage third-party and custom middleware
+
 - [ ] Describe Middleware?
+
+Middleware are function calls that can extend the functionality express and has the ability to change req and res objects
 
 - [ ] Describe a Resource?
 
+Resources can be described as the data that we are working with in our back-end applications
+
 - [ ] What can the API return to help clients know if a request was successful?
 
+API's can return response status codes that can illustrate the success or failure of a request
+
 - [ ] How can we partition our application into sub-applications?
+
+By separating out the logic that handles various aspects of our app into sub-folders/files we can write clean and modular code that is both easier to maintain and read
 
 ## Project Setup
 
