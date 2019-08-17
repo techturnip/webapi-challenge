@@ -57,7 +57,7 @@ router.post('/', validateProject, async (req, res) => {
 })
 // ------------------------------------------------|
 // POST Request creates a new action in db for the
-// specified project ------------------------------|
+// specified project by id ------------------------|
 router.post('/:id', validateActionPost, async (req, res) => {
   try {
     const newAction = await Actions.insert(req.body)

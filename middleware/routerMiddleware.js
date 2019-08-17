@@ -5,7 +5,6 @@ module.exports = {
   validateActionPost,
   validateActionUpdate
 }
-
 // Import project model ---------------------------|
 const Projects = require('../projects/projectModel.js')
 const Actions = require('../actions/actionModel.js')
@@ -15,6 +14,7 @@ const Actions = require('../actions/actionModel.js')
 function validateProjectId(req, res, next) {
   const { id } = req.params
 
+  // call to database to verify the ID
   Projects.get(id)
     .then(project => {
       if (project) {
@@ -33,10 +33,13 @@ function validateProjectId(req, res, next) {
 }
 // ------------------------------------------------|
 function validateProject(req, res, next) {
+  // check for req.body
   if (req.body && Object.keys(req.body).length > 0) {
     const { name, description } = req.body
 
+    // check if name and description exist
     if (name && description) {
+      // make sure name and description are not empty and are both strings
       if (
         name.length > 2 &&
         typeof name === 'string' &&
@@ -63,6 +66,7 @@ function validateProject(req, res, next) {
 function validateActionId(req, res, next) {
   const { id } = req.params
 
+  // call to database to verify the ID
   Actions.get(id)
     .then(action => {
       if (action) {
